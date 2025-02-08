@@ -20,6 +20,11 @@ jobs:
         with:
           fetch-depth: 0  # Ensures full history for SonarCloud analysis
 
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
       # Caches SonarCloud dependencies to speed up future runs
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
