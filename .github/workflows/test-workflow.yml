@@ -21,10 +21,10 @@ jobs:
         with:
           dotnet-version: '9.0' # Ensure this matches your project version
 
-      - name: Install Dependencies
+      - name: Install Chrome Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgbm-dev libxkbcommon-x11-0 libasound2
+          sudo apt-get install -y libgbm-dev libxkbcommon-x11-0 fonts-liberation
 
       - name: Restore Dependencies
         run: dotnet restore
