@@ -21,6 +21,11 @@ jobs:
         with:
           dotnet-version: '9.0' # Ensure this matches your project version
 
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgbm-dev libxkbcommon-x11-0 libasound2
+
       - name: Restore Dependencies
         run: dotnet restore
 
