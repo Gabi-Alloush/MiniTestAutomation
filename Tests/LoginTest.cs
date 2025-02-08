@@ -21,7 +21,10 @@ namespace MiniTestAutomation.Tests
             options.AddArguments("--disable-dev-shm-usage"); // Overcome limited resource issues
             options.AddArguments("--disable-gpu"); // Disable GPU usage
             options.AddArguments("--window-size=1920,1080"); // Set a standard screen size
-            options.AddArguments("--user-data-dir=/tmp/chrome-user-data"); // Ensure a unique user data directory
+            options.AddArguments("--remote-debugging-port=9222"); // Ensures unique debugging session
+            options.AddArguments("--disable-blink-features=AutomationControlled"); // Helps avoid bot detection
+            options.AddArguments("--disable-infobars"); // Prevents UI alerts that may block automation
+
 
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
