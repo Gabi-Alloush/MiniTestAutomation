@@ -15,6 +15,14 @@ namespace MiniTestAutomation.Tests
         [TestInitialize]
         public void Setup()
         {
+            var options = new ChromeOptions();
+            options.AddArguments("--headless"); // Run Chrome in headless mode
+            options.AddArguments("--no-sandbox"); // Bypass OS security model
+            options.AddArguments("--disable-dev-shm-usage"); // Overcome limited resource issues
+            options.AddArguments("--disable-gpu"); // Disable GPU usage
+            options.AddArguments("--window-size=1920,1080"); // Set a standard screen size
+            options.AddArguments("--user-data-dir=/tmp/chrome-user-data"); // Ensure a unique user data directory
+
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
             driver.Navigate().GoToUrl("https://parabank.parasoft.com/parabank/index.htm");
