@@ -1,0 +1,48 @@
+# Handles SonarCloud code analysis
+# This workflow runs SonarCloud code analysis on every push and PR
+name: SonarCloud Analysis
+
+on:
+  push:
+    branches:
+      - main  # Runs on every push to main branch
+  pull_request:
+    types: [opened, synchronize, reopened]  # Runs on PRs
+
+jobs:
+  build:
+    name: Build and analyze
+    runs-on: ubuntu-latest  # Using Ubuntu for consistency
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensures full history for SonarCloud analysis
+
+      # Caches SonarCloud dependencies to speed up future runs
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      # Installs the SonarCloud scanner
+      - name: Install SonarCloud Scanner
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+
+      # Runs SonarCloud analysis
+      - name: Build and Analyze with SonarCloud
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          # Start SonarCloud scanner
+          dotnet-sonarscanner begin /k:"Gabi-Alloush_MiniTestAutomation" /o:"gabi-alloush" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          
+          # Build the project
+          dotnet build
+          
+          # Complete the analysis
+          dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
