@@ -1,8 +1,7 @@
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MiniTestAutomation.Pages;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using MiniTestAutomation.Pages;
 
 namespace MiniTestAutomation.Tests
 {
@@ -17,22 +16,13 @@ namespace MiniTestAutomation.Tests
         {
             var options = new ChromeOptions();
 
-            // Detect OS and set the correct Chrome binary path
+            // Set Chrome binary path based on OS
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
-            {
-                options.BinaryLocation = @"C:\Program Files\Google\Chrome\Application\chrome.exe"; // Windows path
-            }
-            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
-            {
-                options.BinaryLocation = "/usr/bin/google-chrome"; // Linux path for GitHub Actions
-            }
+                options.BinaryLocation = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+            else
+                options.BinaryLocation = "/usr/bin/google-chrome";
 
-            options.AddArguments("--headless"); // Run in headless mode for CI/CD
-            options.AddArguments("--no-sandbox"); // Required for CI/CD environments
-            options.AddArguments("--disable-dev-shm-usage"); // Prevents resource issues in Docker/Linux environments
-            options.AddArguments("--disable-gpu"); // Disables GPU usage
-            options.AddArguments("--window-size=1920,1080"); // Sets a standard viewport
-            options.AddArguments("--disable-software-rasterizer"); // Avoids GPU emulation issues
+            options.AddArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--window-size=1920,1080");
 
             driver = new ChromeDriver(options);
             driver.Manage().Window.Maximize();
@@ -45,9 +35,8 @@ namespace MiniTestAutomation.Tests
         public void Test_ValidLogin()
         {
             loginPage.EnterUsername("Gabi");
-            loginPage.EnterPassword("Alloush");
+            loginPage.EnterPassword("Password");
             loginPage.ClickLoginButton();
-
             Assert.IsTrue(loginPage.IsLoginSuccessful(), "Login failed!");
         }
 
