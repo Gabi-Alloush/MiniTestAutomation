@@ -25,6 +25,11 @@ namespace MiniTestAutomation.Tests
             options.AddArguments("--disable-blink-features=AutomationControlled"); // Helps avoid bot detection
             options.AddArguments("--disable-infobars"); // Prevents UI alerts that may block automation
 
+            // Explicitly set ChromeDriverService to avoid "session not created" issue
+            var service = ChromeDriverService.CreateDefaultService();
+            service.EnableVerboseLogging = true;
+            service.SuppressInitialDiagnosticInformation = true;
+            service.HideCommandPromptWindow = true;
 
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
