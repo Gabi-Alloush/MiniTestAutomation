@@ -16,22 +16,25 @@ namespace MiniTestAutomation.Tests
         public void Setup()
         {
             var options = new ChromeOptions();
-            options.AddArguments("--headless"); // Run Chrome in headless mode
-            options.AddArguments("--no-sandbox"); // Bypass OS security model
-            options.AddArguments("--disable-dev-shm-usage"); // Overcome limited resource issues
-            options.AddArguments("--disable-gpu"); // Disable GPU usage
-            options.AddArguments("--window-size=1920,1080"); // Set a standard screen size
-            options.AddArguments("--remote-debugging-port=9222"); // Ensures unique debugging session
-            options.AddArguments("--disable-blink-features=AutomationControlled"); // Helps avoid bot detection
-            options.AddArguments("--disable-infobars"); // Prevents UI alerts that may block automation
 
-            // Explicitly set ChromeDriverService to avoid "session not created" issue
-            var service = ChromeDriverService.CreateDefaultService();
-            service.EnableVerboseLogging = true;
-            service.SuppressInitialDiagnosticInformation = true;
-            service.HideCommandPromptWindow = true;
+            // Detect OS and set the correct Chrome binary path
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            {
+                options.BinaryLocation = @"C:\Program Files\Google\Chrome\Application\chrome.exe"; // Windows path
+            }
+            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+            {
+                options.BinaryLocation = "/usr/bin/google-chrome"; // Linux path for GitHub Actions
+            }
 
-            driver = new ChromeDriver();
+            options.AddArguments("--headless"); // Run in headless mode for CI/CD
+            options.AddArguments("--no-sandbox"); // Required for CI/CD environments
+            options.AddArguments("--disable-dev-shm-usage"); // Prevents resource issues in Docker/Linux environments
+            options.AddArguments("--disable-gpu"); // Disables GPU usage
+            options.AddArguments("--window-size=1920,1080"); // Sets a standard viewport
+            options.AddArguments("--disable-software-rasterizer"); // Avoids GPU emulation issues
+
+            driver = new ChromeDriver(options);
             driver.Manage().Window.Maximize();
             driver.Navigate().GoToUrl("https://parabank.parasoft.com/parabank/index.htm");
 
