@@ -1,38 +1,45 @@
+# This workflow runs automated UI tests using Selenium WebDriver and MSTest.
 name: Run Automated Tests
 
 on:
   push:
     branches:
-      - main
+      - main  # Runs tests on every push to main
   pull_request:
     branches:
-      - main
+      - main  # Runs tests on PRs to main
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Uses Ubuntu for consistency with CI/CD
 
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set Up .NET
-        uses: actions/setup-dotnet@v3
+      # Step 2: Set up .NET 8 (Ensure correct SDK version is installed)
+      - name: Set Up .NET 8
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0' # Ensure this matches your project version
+          dotnet-version: '8.0.x'  # Matches project target framework
 
+      # Step 3: Install Chrome Dependencies (Needed for Selenium WebDriver)
       - name: Install Chrome Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
+      # Step 4: Restore dependencies (Ensures all NuGet packages are installed)
       - name: Restore Dependencies
         run: dotnet restore
 
+      # Step 5: Build the project (Compiles without restoring dependencies again)
       - name: Build Project
         run: dotnet build --configuration Release --no-restore
 
+      # Step 6: Run automated tests using MSTest
       - name: Run Tests
         env:
-          CHROME_BIN: /usr/bin/google-chrome
+          CHROME_BIN: /usr/bin/google-chrome  # Ensures Selenium uses the correct Chrome path
         run: dotnet test --logger trx --results-directory TestResults
