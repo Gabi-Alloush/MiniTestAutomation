@@ -36,8 +36,8 @@ namespace MiniTestAutomation.Tests
         [TestMethod]
         public void Test_ValidLogin()
         {
-            loginPage.EnterUsername("Gabi");
-            loginPage.EnterPassword("Password");
+            loginPage.EnterUsername("TestUser123");
+            loginPage.EnterPassword("SecurePass123");
             loginPage.ClickLoginButton();
             Assert.IsTrue(loginPage.IsLoginSuccessful(), "Login failed!");
         }
