@@ -65,12 +65,6 @@ jobs:
       - name: Debug TRX File Location
         run: ls -R allure-results
 
-      # Step 10: Convert TRX to Allure Results (Fixed Path)
-      - name: Convert TRX to Allure Results
-        run: |
-            mkdir -p allure-results
-            cp allure-results/*.trx allure-results/
-
       # Step 11: Generate Allure Report
       - name: Generate Allure Report
         run: allure generate allure-results --clean
