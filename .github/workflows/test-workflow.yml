@@ -68,7 +68,10 @@ jobs:
 
       # Step 10: Generate Allure Report
       - name: Generate Allure Report
-        run: allure generate allure-results --results-dir allure-results/results.xml --clean
+        run: |
+            mkdir -p allure-results
+            cp allure-results/results.xml allure-results/
+            allure generate allure-results --clean
 
       # Step 11: Upload Allure Report as Artifact
       - name: Upload Allure Report
