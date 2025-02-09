@@ -66,6 +66,11 @@ jobs:
       - name: Debug Allure Results Folder
         run: ls -R allure-results
 
+      - name: Ensure JUnit Results Are Inside Allure Folder
+        run: |
+            mkdir -p allure-results
+            mv allure-results/results.xml allure-results/
+
       # Step 10: Generate Allure Report
       - name: Generate Allure Report
         run: allure generate allure-results --clean
