@@ -38,50 +38,38 @@ jobs:
       - name: Build Project
         run: dotnet build --configuration Release --no-restore
 
-      # Step 6: Run automated tests to generate Allure results directly
-      - name: Run Tests with Allure Logging
+      # Step 6: Run automated tests and generate TRX results
+      - name: Run Tests with TRX Logging
         env:
             CHROME_BIN: /usr/bin/google-chrome
-        run: dotnet test --logger "Allure;LogFileName=allure-results"
+        run: dotnet test --logger "trx;LogFileName=TestResults.trx" --results-directory allure-results || true
 
+      # Step 7: Convert TRX to JUnit (Allure-compatible format)
+      - name: Convert TRX to JUnit
+        run: |
+            dotnet tool install --global trx2junit
+            mkdir -p allure-results
+            trx2junit allure-results/TestResults.trx --output allure-results/results.xml
 
-      # Step 7: Install Allure CLI
+      # Step 8: Install Allure CLI
       - name: Install Allure CLI
         run: |
           sudo apt-get update
-          sudo apt-get install -y openjdk-17-jre  # Ensures Java is available for Allure
+          sudo apt-get install -y openjdk-17-jre
           curl -o allure-2.32.2.tgz -L https://github.com/allure-framework/allure2/releases/download/2.32.2/allure-2.32.2.tgz
           tar -zxvf allure-2.32.2.tgz
           sudo mv allure-2.32.2 /opt/allure
           sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
 
-      # Step 8: Upload Raw Test Results for Debugging (Fixed Path)
-      - name: Upload Raw Test Results for Debugging
-        uses: actions/upload-artifact@v4
-        with:
-            name: raw-test-results
-            path: allure-results
-
-      # Step 9: Debug TRX File Location (Ensure TRX exists)
-      - name: Debug TRX File Location
+      # Step 9: Debug Allure Results Folder (Ensure conversion worked)
+      - name: Debug Allure Results Folder
         run: ls -R allure-results
 
-      # Step 10: Debug Allure Results Folder
-      - name: Debug Allure Results
-        run: ls -R allure-results
-    
-      # Step 11: Convert the .trx File to Allure JSON
-      - name: Convert TRX to Allure Results
-        run: |
-            mkdir -p allure-results
-            dotnet tool install --global trx-parser-cli
-            trx-parser allure-results/TestResults.trx --output allure-results
-
-      # Step 11: Generate Allure Report
+      # Step 10: Generate Allure Report
       - name: Generate Allure Report
         run: allure generate allure-results --clean
 
-      # Step 12: Upload Allure Report as Artifact
+      # Step 11: Upload Allure Report as Artifact
       - name: Upload Allure Report
         uses: actions/upload-artifact@v4
         with:
