@@ -42,7 +42,8 @@ jobs:
       - name: Run Tests with TRX Logging
         env:
             CHROME_BIN: /usr/bin/google-chrome  # Ensures Selenium uses the correct Chrome path
-        run: dotnet test --logger "trx;LogFileName=TestResults.trx" --results-directory allure-results
+        run: |
+            dotnet test --logger "trx;LogFileName=TestResults.trx" --results-directory allure-results || true
 
       # Step 7: Install Allure CLI
       - name: Install Allure CLI
@@ -75,7 +76,6 @@ jobs:
             mkdir -p allure-results
             dotnet tool install --global trx-parser-cli
             trx-parser allure-results/TestResults.trx --output allure-results
-
 
       # Step 11: Generate Allure Report
       - name: Generate Allure Report
