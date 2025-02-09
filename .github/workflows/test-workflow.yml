@@ -49,8 +49,8 @@ jobs:
         run: |
             dotnet tool install --global trx2junit
             mkdir -p allure-results
-            trx2junit allure-results/TestResults.trx --output allure-results
-            mv allure-results/TestResults.xml allure-results/results.xml
+            trx2junit allure-results/TestResults.trx --output allure-results/results.xml
+            if [ ! -f allure-results/results.xml ]; then echo "Conversion failed: results.xml not found!" && ls -la allure-results/; exit 1; fi
 
       # Step 8: Install Allure CLI
       - name: Install Allure CLI
