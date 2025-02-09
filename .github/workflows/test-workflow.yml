@@ -39,10 +39,16 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       # Step 6: Run automated tests using MSTest and generate TRX report
-      - name: Run Tests
+      # - name: Run Tests
+      #   env:
+      #     CHROME_BIN: /usr/bin/google-chrome  # Ensures Selenium uses the correct Chrome path
+      #   run: dotnet test --logger trx --results-directory TestResults
+
+      - name: Run Tests with TRX Logging
         env:
-          CHROME_BIN: /usr/bin/google-chrome  # Ensures Selenium uses the correct Chrome path
-        run: dotnet test --logger trx --results-directory TestResults
+            CHROME_BIN: /usr/bin/google-chrome  # Ensures Selenium uses the correct Chrome path
+        run: dotnet test --logger "trx;LogFileName=TestResults.trx" --results-directory allure-results
+
 
       # Step 7: Install Allure CLI
       - name: Install Allure CLI
