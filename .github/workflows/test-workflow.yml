@@ -68,6 +68,12 @@ jobs:
       # Step 10: Debug Allure Results Folder
       - name: Debug Allure Results
         run: ls -R allure-results
+    
+      # Step 11: Convert the .trx File to Allure JSON
+      - name: Convert TRX to Allure Results
+        run: |
+            mkdir -p allure-results
+            allure trx2allure allure-results/TestResults.trx -o allure-results
 
 
       # Step 11: Generate Allure Report
