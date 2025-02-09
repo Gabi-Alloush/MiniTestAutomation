@@ -54,6 +54,12 @@ jobs:
           sudo mv allure-2.32.2 /opt/allure
           sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
 
+      - name: Upload Raw Test Results for Debugging
+        uses: actions/upload-artifact@v4
+        with:
+            name: raw-test-results
+            path: TestResults
+
       # Step 8: Generate Allure Report
       - name: Generate Allure Report
         run: allure generate TestResults --clean
