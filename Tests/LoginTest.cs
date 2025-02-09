@@ -8,7 +8,7 @@ namespace MiniTestAutomation.Tests
     [TestClass]
     public class LoginTest
     {
-        private IWebDriver driver = null!;
+        private ChromeDriver driver = null!;
         private LoginPage loginPage = null!;
 
         [TestInitialize]
@@ -22,8 +22,10 @@ namespace MiniTestAutomation.Tests
             else
                 options.BinaryLocation = "/usr/bin/google-chrome";
 
+            // Headless mode & performance optimizations
             options.AddArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--window-size=1920,1080");
 
+            // Initialize ChromeDriver with options
             driver = new ChromeDriver(options);
             driver.Manage().Window.Maximize();
             driver.Navigate().GoToUrl("https://parabank.parasoft.com/parabank/index.htm");
@@ -43,7 +45,7 @@ namespace MiniTestAutomation.Tests
         [TestCleanup]
         public void TearDown()
         {
-            driver.Quit();
+            driver?.Quit();
         }
     }
 }
