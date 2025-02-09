@@ -38,8 +38,30 @@ jobs:
       - name: Build Project
         run: dotnet build --configuration Release --no-restore
 
-      # Step 6: Run automated tests using MSTest
+      # Step 6: Run automated tests using MSTest and generate TRX report
       - name: Run Tests
         env:
           CHROME_BIN: /usr/bin/google-chrome  # Ensures Selenium uses the correct Chrome path
         run: dotnet test --logger trx --results-directory TestResults
+
+      # Step 7: Install Allure CLI
+      - name: Install Allure CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jre  # Ensures Java is available for Allure
+          curl -o allure-2.32.2.tgz -L https://github.com/allure-framework/allure2/releases/download/2.32.2/allure-2.32.2.tgz
+          tar -zxvf allure-2.32.2.tgz
+          sudo mv allure-2.32.2 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
+
+      # Step 8: Generate Allure Report
+      - name: Generate Allure Report
+        run: allure generate TestResults --clean
+
+      # Step 9: Upload Allure Report as Artifact
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
+
