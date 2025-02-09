@@ -63,9 +63,14 @@ jobs:
       - name: Debug TRX File Location
         run: ls -R TestResults
 
+      - name: Convert TRX to Allure Results
+        run: |
+            mkdir -p allure-results
+            cp TestResults/*.trx allure-results/
+
       # Step 8: Generate Allure Report
       - name: Generate Allure Report
-        run: allure generate TestResults --clean
+        run: allure generate allure-results --clean
 
       # Step 9: Upload Allure Report as Artifact
       - name: Upload Allure Report
