@@ -46,8 +46,8 @@ To run tests in headless mode (useful for CI/CD), modify ChromeOptions in LoginT
 ---
 
 ## 🔄 Continuous Integration (CI/CD)
-✅ GitHub Actions automatically executes tests on every push & PR.
-✅ Test results are stored in the TestResults folder.
+✅ GitHub Actions automatically executes tests on every push & PR.  
+✅ Test results are stored in the TestResults folder.  
 ✅ SonarCloud checks code quality & test coverage.
 
 ✅ CI/CD Pipeline Steps:
@@ -60,30 +60,32 @@ To run tests in headless mode (useful for CI/CD), modify ChromeOptions in LoginT
 ---
 
 ## 📊 SonarCloud Code Quality
-SonarCloud performs static analysis to detect:
-✔ Code smells
-✔ Bugs
-✔ Security vulnerabilities
+SonarCloud performs static analysis to detect:  
+✔ Code smells  
+✔ Bugs  
+✔ Security vulnerabilities  
 ✔ Maintainability issues
 
 ---
 
 ## 📂 Project Structure
+```
 MiniTestAutomation/
 │── .github/workflows/        # GitHub Actions CI/CD pipelines
 │── Pages/                    # Page Object Model (POM) structure
 │── Tests/                    # MSTest test cases
 │── README.md                 # Project documentation
 │── MiniTestAutomation.csproj # .NET project file
-│── .gitignore                 # Git ignored files
+│── .gitignore                # Git ignored files
+```
 
 ---
 
-## ✅ Recent Updates & Fixes
-[✅ CI/CD Integration] Automated tests run on GitHub Actions.
-[✅ SonarCloud Added] Static code analysis enabled.
-[✅ Refactored LoginTest] Optimized Selenium setup & cleanup.
-[🔄 Next Step] Implementing Allure Test Reports.
+## ✅ Recent Updates & Fixes  
+✅ CI/CD Integration: Automated tests run on GitHub Actions.  
+✅ SonarCloud Added: Static code analysis enabled.  
+✅ Refactored LoginTest: Optimized Selenium setup & cleanup.  
+🔄 Next Step: Implementing Allure Test Reports.
 
 ---
 
