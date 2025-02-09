@@ -39,16 +39,10 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       # Step 6: Run automated tests using MSTest and generate TRX report
-      # - name: Run Tests
-      #   env:
-      #     CHROME_BIN: /usr/bin/google-chrome  # Ensures Selenium uses the correct Chrome path
-      #   run: dotnet test --logger trx --results-directory TestResults
-
       - name: Run Tests with TRX Logging
         env:
             CHROME_BIN: /usr/bin/google-chrome  # Ensures Selenium uses the correct Chrome path
         run: dotnet test --logger "trx;LogFileName=TestResults.trx" --results-directory allure-results
-
 
       # Step 7: Install Allure CLI
       - name: Install Allure CLI
@@ -60,28 +54,30 @@ jobs:
           sudo mv allure-2.32.2 /opt/allure
           sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
 
+      # Step 8: Upload Raw Test Results for Debugging (Fixed Path)
       - name: Upload Raw Test Results for Debugging
         uses: actions/upload-artifact@v4
         with:
             name: raw-test-results
-            path: TestResults
-      
-      - name: Debug TRX File Location
-        run: ls -R TestResults
+            path: allure-results
 
+      # Step 9: Debug TRX File Location (Ensure TRX exists)
+      - name: Debug TRX File Location
+        run: ls -R allure-results
+
+      # Step 10: Convert TRX to Allure Results (Fixed Path)
       - name: Convert TRX to Allure Results
         run: |
             mkdir -p allure-results
-            cp TestResults/*.trx allure-results/
+            cp allure-results/*.trx allure-results/
 
-      # Step 8: Generate Allure Report
+      # Step 11: Generate Allure Report
       - name: Generate Allure Report
         run: allure generate allure-results --clean
 
-      # Step 9: Upload Allure Report as Artifact
+      # Step 12: Upload Allure Report as Artifact
       - name: Upload Allure Report
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: allure-report
-
