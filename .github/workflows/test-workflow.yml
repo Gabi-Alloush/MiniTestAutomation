@@ -59,6 +59,9 @@ jobs:
         with:
             name: raw-test-results
             path: TestResults
+      
+      - name: Debug TRX File Location
+        run: ls -R TestResults
 
       # Step 8: Generate Allure Report
       - name: Generate Allure Report
