@@ -38,48 +38,13 @@ jobs:
       - name: Build Project
         run: dotnet build --configuration Release --no-restore
 
-      # Step 6: Run automated tests and generate TRX results
+      # Step 6: Run MSTest and generate TRX reports
       - name: Run Tests with TRX Logging
-        env:
-            CHROME_BIN: /usr/bin/google-chrome
-        run: dotnet test --logger "trx;LogFileName=TestResults.trx" --results-directory allure-results || true
+        run: dotnet test --logger trx --results-directory TestResults || true
 
-      # Step 7: Convert TRX to JUnit (Allure-compatible format)
-      - name: Convert TRX to JUnit
-        run: |
-            dotnet tool install --global trx2junit
-            mkdir -p allure-results
-            trx2junit allure-results/TestResults.trx --output allure-results/
-            mv allure-results/results.xml/TestResults.xml allure-results/results.xml || echo "No need to move"
-            rm -rf allure-results/results.xml
-
-      # Step 8: Install Allure CLI
-      - name: Install Allure CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openjdk-17-jre
-          curl -o allure-2.32.2.tgz -L https://github.com/allure-framework/allure2/releases/download/2.32.2/allure-2.32.2.tgz
-          tar -zxvf allure-2.32.2.tgz
-          sudo mv allure-2.32.2 /opt/allure
-          sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
-
-      # Step 9: Debug Allure Results Folder (Ensure conversion worked)
-      - name: Debug Allure Results Folder
-        run: ls -R allure-results
-
-      # Step 10: Generate Allure Report
-      - name: Generate Allure Report
-        run: allure generate allure-results --results-dir allure-results/TestResults.xml --clean
-
-      # Step 11: Upload Allure Report as Artifact
-      - name: Upload Allure Report
+      # Step 7: Upload TRX Results for Debugging
+      - name: Upload TRX Results
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report
-          path: allure-report
-
-      - name: Upload JUnit Results for Debugging
-        uses: actions/upload-artifact@v4
-        with:
-            name: junit-results
-            path: allure-results/results.xml
+          name: trx-results
+          path: TestResults/
