@@ -12,7 +12,7 @@ It is designed to automate UI testing for **ParaBank**, following industry best 
 - **GitHub Actions CI/CD** for automated test execution
 - **SonarCloud Integration** for code quality analysis
 - **Headless Chrome Execution** for CI/CD efficiency
-- **Test Reporting (Coming Soon: Allure)**
+- **Test Reporting using TRX + ReportUnit**
 
 ---
 
@@ -85,7 +85,15 @@ MiniTestAutomation/
 ✅ CI/CD Integration: Automated tests run on GitHub Actions.  
 ✅ SonarCloud Added: Static code analysis enabled.  
 ✅ Refactored LoginTest: Optimized Selenium setup & cleanup.  
-🔄 Next Step: Implementing Allure Test Reports.
+🔄 Next Step: Implementing TRX + ReportUnit for Test Reports..
+
+---
+
+## ℹ️ Why We Chose TRX + ReportUnit Instead of Allure
+Initially, we planned to use Allure for test reporting. However, we faced issues integrating Allure CLI in GitHub Actions.After analysis, we decided to use TRX (built-in MSTest reporting) with ReportUnit, which:
+- Works natively with MSTest.
+- Requires no extra CLI tools.
+- Is easier to integrate into CI/CD pipelines.
 
 ---
 

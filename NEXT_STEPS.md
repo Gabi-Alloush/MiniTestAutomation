@@ -6,10 +6,10 @@ This document tracks upcoming features and improvements for the **Mini Test Auto
 
 ## 🔄 Upcoming Features
 
-### **1️⃣ Implement Allure Test Reporting**
-- Integrate **Allure** for generating detailed test reports
-- Ensure reports include screenshots for failed tests
-- Automate report generation in GitHub Actions
+### **1️⃣ Implement TRX + ReportUnit for Test Reporting**
+- Generate TRX test reports using MSTest.
+- Use ReportUnit to convert TRX reports into an HTML format.
+- Automate report generation and upload in GitHub Actions.
 
 ### **2️⃣ Expand Test Coverage**
 - Add **more test scenarios** for ParaBank
@@ -35,3 +35,7 @@ This document tracks upcoming features and improvements for the **Mini Test Auto
 ✔ **Refactored Login Test for Better Maintainability**  
 
 ---
+
+## ℹ️ Why We Switched from Allure to TRX + ReportUnit
+
+After facing issues with Allure integration in GitHub Actions, we decided to use TRX + ReportUnit instead.This solution is lighter, more stable, and works natively with MSTest.
