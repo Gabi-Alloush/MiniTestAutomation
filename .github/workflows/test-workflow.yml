@@ -1,6 +1,10 @@
 # This workflow runs automated UI tests using Selenium WebDriver and MSTest.
 name: Run Automated Tests
 
+permissions:
+  checks: write
+  pull-requests: write
+
 on:
   push:
     branches:
@@ -14,32 +18,49 @@ jobs:
     runs-on: ubuntu-latest  # Uses Ubuntu for consistency with CI/CD
 
     steps:
-      # Step 1: Checkout the repository
+        # Step 1: Checkout the repository
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Step 2: Set up .NET 8 (Ensure correct SDK version is installed)
+        # Step 2: Set up .NET 8 (Ensure correct SDK version is installed)
       - name: Set Up .NET 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'  # Matches project target framework
 
-      # Step 3: Install Chrome Dependencies (Needed for Selenium WebDriver)
+        # Step 3: Install Chrome Dependencies (Needed for Selenium WebDriver)
       - name: Install Chrome Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
-      # Step 4: Restore dependencies (Ensures all NuGet packages are installed)
+        # Step 4: Restore dependencies (Ensures all NuGet packages are installed)
       - name: Restore Dependencies
         run: dotnet restore
 
-      # Step 5: Build the project (Compiles without restoring dependencies again)
+        # Step 5: Build the project (Compiles without restoring dependencies again)
       - name: Build Project
         run: dotnet build --configuration Release --no-restore
 
-      # Step 6: Run automated tests using MSTest
+        # Step 6: Run automated tests using MSTest
       - name: Run Tests
         env:
           CHROME_BIN: /usr/bin/google-chrome  # Ensures Selenium uses the correct Chrome path
         run: dotnet test --logger trx --results-directory TestResults
+        continue-on-error: true
+
+        # Step 7: Publish TRX Test Results as a Check on Github Pipeline
+      - name: Publish TRX Test Results
+        uses: dorny/test-reporter@v1
+        with:
+          name: TRX Test Results
+          path: TestResults/*.trx
+          reporter: dotnet-trx
+          fail-on-error: false
+
+        # Step 8: Upload TRX Test Results as an Artifact for Debugging
+      - name: Upload TRX Results
+        uses: actions/upload-artifact@v4
+        with:
+            name: trx-results
+            path: TestResults/
