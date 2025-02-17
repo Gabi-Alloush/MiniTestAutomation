@@ -1,6 +1,10 @@
 # This workflow runs automated UI tests using Selenium WebDriver and MSTest.
 name: Run Automated Tests
 
+permissions:
+  checks: write
+  pull-requests: write
+
 on:
   push:
     branches:
