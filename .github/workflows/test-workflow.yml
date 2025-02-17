@@ -43,3 +43,10 @@ jobs:
         env:
           CHROME_BIN: /usr/bin/google-chrome  # Ensures Selenium uses the correct Chrome path
         run: dotnet test --logger trx --results-directory TestResults
+
+      # Step 7: Upload TRX Test Results as an Artifact for Debugging
+      - name: Upload TRX Results
+        uses: actions/upload-artifact@v4
+        with:
+            name: trx-results
+            path: TestResults/
