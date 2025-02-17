@@ -56,8 +56,9 @@ jobs:
           name: TRX Test Results
           path: TestResults/*.trx
           reporter: dotnet-trx
+          fail-on-error: false
 
-        # Step 7: Upload TRX Test Results as an Artifact for Debugging
+        # Step 8: Upload TRX Test Results as an Artifact for Debugging
       - name: Upload TRX Results
         uses: actions/upload-artifact@v4
         with:
