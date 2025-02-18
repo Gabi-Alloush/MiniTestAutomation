@@ -8,12 +8,14 @@ namespace MiniTestAutomation.Tests
     [TestClass]
     public class LoginTest
     {
+        private RegistrationPage registrationPage = null!;
         private ChromeDriver driver = null!;
         private LoginPage loginPage = null!;
 
         [TestInitialize]
         public void Setup()
         {
+            registrationPage = new RegistrationPage(driver);
             var options = new ChromeOptions();
 
             // Set Chrome binary path based on OS
@@ -36,9 +38,24 @@ namespace MiniTestAutomation.Tests
         [TestMethod]
         public void Test_ValidLogin()
         {
-            loginPage.EnterUsername("TestUser123");
-            loginPage.EnterPassword("SecurePass123");
+            // Generate unique credentials
+            string username = "TestUser_" + Guid.NewGuid().ToString("N").Substring(0, 8);
+            string password = "Test@123";
+
+            // Navigate to the registration page
+            driver.FindElement(By.LinkText("Register")).Click();
+
+            // Register the new user
+            registrationPage.EnterPersonalDetails("Test", "User", "123 Test Street", "TestCity", "TestState", "12345", "1234567890", "123-45-6789");
+            registrationPage.EnterAccountDetails(username, password);
+            registrationPage.SubmitRegistration();
+
+            // Log in with the newly created user
+            loginPage.EnterUsername(username);
+            loginPage.EnterPassword(password);
             loginPage.ClickLoginButton();
+
+            // Verify login success
             Assert.IsTrue(loginPage.IsLoginSuccessful(), "Login failed!");
         }
 
